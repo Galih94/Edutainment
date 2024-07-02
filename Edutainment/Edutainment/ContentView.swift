@@ -40,12 +40,14 @@ struct ContentView: View {
     private var bottomBoundQuestionAmount: Int = 2
     private var topBoundQuestionAmount: Int = 10
     
+    private var isLastQuestion: Bool {
+        return currentNumber == questionAmount
+    }
     
     private func generateQuestion() {
         for i in 1...questionAmount {
             let questionA = Int.random(in: bottomBoundQuestion...topBoundQuestion)
             let questionB = Int.random(in: bottomBoundQuestion...topBoundQuestion)
-            print("cta banana bounds: \(bottomBoundQuestionAmount), \(topBoundQuestionNumber), value: \(questionA) , \(questionA)")
             questions.append(QuestionMultiplication(questionNumber: i,
                                                     questionA: questionA,
                                                     questionB: questionB
@@ -89,7 +91,6 @@ struct ContentView: View {
                         .bold()
                     Spacer()
                     VStack {
-//                        Stepper("Question Amount: \(questionAmount)", value: $questionAmount, in: bottomBoundQuestionAmount...topBoundQuestionAmount, step: 1)
                         Text("Question Amount: \(questionAmount)")
                             .foregroundStyle(.white)
                             .font(.headline)
@@ -150,7 +151,7 @@ struct ContentView: View {
                     TextField("Enter your answer", text: $currentAnswer)
                         .textInputAutocapitalization(.never)
                         .keyboardType(.numberPad)
-                    Button("Result") {
+                    Button(isLastQuestion ? "Result" : "Next Question") {
                         processAnswer(index: currentNumber - 1)
                     }
                     .foregroundStyle(.white)
