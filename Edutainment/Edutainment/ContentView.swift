@@ -38,41 +38,53 @@ struct ContentView: View {
         switch currentState {
         case .setting:
             ZStack {
-                Color.gray
+                Color.mint
                     .ignoresSafeArea()
-                List {
-                    Section {
-                        Text("Question Amount")
-                            .font(.headline)
-                        Stepper("\(questionAmount)", value: $questionAmount, in: bottomBoundQuestionAmount...topBoundQuestionAmount, step: 1)
+                VStack(spacing: 20) {
+                    Text("Setting")
+                        .foregroundStyle(.white)
+                        .font(.title)
+                        .bold()
+                    Spacer()
+                    VStack {
+                        Stepper("Question Amount: \(questionAmount)", value: $questionAmount, in: bottomBoundQuestionAmount...topBoundQuestionAmount, step: 1)
+                        .foregroundStyle(.white)
                         
-                    }
-                    Section {
+                    }.padding()
+                    VStack(spacing: 0) {
                         Text("Range of Multiplication Number")
+                            .foregroundStyle(.white)
                             .font(.headline)
                         Stepper("Bottom Number: \(bottomBoundQuestion)", value: $bottomBoundQuestion, in: bottomBoundQuestionNumber...topBoundQuestionNumber, step: 1) { _ in
                             if bottomBoundQuestion >= topBoundQuestion {
                                 bottomBoundQuestion = bottomBoundQuestion - 1
                             }
                         }
+                        .foregroundStyle(.white)
                         Stepper("Top Number: \(topBoundQuestion)", value: $topBoundQuestion, in: bottomBoundQuestionNumber...topBoundQuestionNumber, step: 1){ _ in
                             if bottomBoundQuestion >= topBoundQuestion {
                                 topBoundQuestion = topBoundQuestion + 1
                             }
                         }
+                        .foregroundStyle(.white)
                         
-                    }
-                    Section {
-                        Button("Start") {
+                    }.padding()
+                    Spacer()
+                    VStack {
+                        Button(action: {
                             currentState = .active
-                        }
-                        .foregroundStyle(.black)
-                        .font(.subheadline)
-                        .bold()
+                        }, label: {
+                            Text("Start")
+                                .padding(.all, 12)
+                                .foregroundColor(.white)
+                                .background(Color.green)
+                                .font(.title)
+                        })
+                        .clipShape(.capsule(style: .continuous))
                     }
-                    .navigationTitle("Setting")
+                    Spacer()
+                    
                 }
-                
             }
         case .active:
             ZStack {
