@@ -41,7 +41,6 @@ struct ContentView: View {
     
     
     private func generateQuestion() {
-        questions = []
         for i in 1...questionAmount {
             let questionA = Int.random(in: bottomBoundQuestion...topBoundQuestion)
             let questionB = Int.random(in: bottomBoundQuestion...topBoundQuestion)
@@ -59,8 +58,11 @@ struct ContentView: View {
         }
     }
     
-    private func gradeScore() {
-        
+    private func resetScore() {
+        currentNumber = 1
+        questions = []
+        currentState = .setting
+        currentScore = 0
     }
     
     private func processAnswer(index: Int) {
@@ -153,12 +155,12 @@ struct ContentView: View {
                 Color.brown
                     .ignoresSafeArea()
                 VStack {
-                    Text("Result Game")
+                    Text("Result Game: \(currentScore) / \(questionAmount)")
                         .foregroundStyle(.white)
                         .font(.title)
                         .bold()
                     Button("Back to Setting") {
-                        currentState = .setting
+                        resetScore()
                     }
                     .foregroundStyle(.white)
                     .font(.subheadline)
