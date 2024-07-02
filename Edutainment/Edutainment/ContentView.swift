@@ -11,6 +11,20 @@ enum StateGame {
     case setting, active, finish
 }
 
+public struct QuestionMultiplication {
+    let questionNumber: Int
+    let questionA: Int
+    let questionB: Int
+    
+    func getQuestionText() -> String {
+        return "What is \(questionA) X \(questionB)"
+    }
+    
+    func getAnswer() -> Int {
+        return questionA * questionB
+    }
+}
+
 struct ContentView: View {
     @State private var currentState: StateGame = .setting
     var body: some View {
