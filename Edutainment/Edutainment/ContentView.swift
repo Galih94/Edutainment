@@ -30,10 +30,49 @@ struct ContentView: View {
     @State private var questionAmount: Int = 2
     @State private var topBoundQuestion: Int = 3
     @State private var bottomBoundQuestion: Int = 2
+    @State private var questions: [QuestionMultiplication] = []
+    @State private var currentNumber: Int = 1
+    @State private var currentScore: Int = 0
+    @State private var currentAnswer: String = ""
     private var bottomBoundQuestionNumber: Int = 2
     private var topBoundQuestionNumber: Int = 10
     private var bottomBoundQuestionAmount: Int = 2
     private var topBoundQuestionAmount: Int = 10
+    
+    
+    private func generateQuestion() {
+        questions = []
+        for i in 1...questionAmount {
+            let questionA = Int.random(in: bottomBoundQuestion...topBoundQuestion)
+            let questionB = Int.random(in: bottomBoundQuestion...topBoundQuestion)
+            print("cta banana bounds: \(bottomBoundQuestionAmount), \(topBoundQuestionNumber), value: \(questionA) , \(questionA)")
+            questions.append(QuestionMultiplication(questionNumber: i,
+                                                    questionA: questionA,
+                                                    questionB: questionB
+                                                   ))
+        }
+    }
+    
+    private func gradeAnswer(index: Int) {
+        if "\(questions[index].getAnswer())" == currentAnswer {
+            currentScore += 1
+        }
+    }
+    
+    private func gradeScore() {
+        
+    }
+    
+    private func processAnswer(index: Int) {
+        gradeAnswer(index: index)
+        if currentNumber == questionAmount  {
+            currentState = .finish
+        } else {
+            currentNumber += 1
+        }
+        currentAnswer = ""
+    }
+    
     var body: some View {
         switch currentState {
         case .setting:
@@ -58,6 +97,8 @@ struct ContentView: View {
                         Stepper("Bottom Number: \(bottomBoundQuestion)", value: $bottomBoundQuestion, in: bottomBoundQuestionNumber...topBoundQuestionNumber, step: 1) { _ in
                             if bottomBoundQuestion >= topBoundQuestion {
                                 bottomBoundQuestion = bottomBoundQuestion - 1
+                            } else {
+                                bottomBoundQuestion
                             }
                         }
                         .foregroundStyle(.white)
@@ -72,6 +113,7 @@ struct ContentView: View {
                     Spacer()
                     VStack {
                         Button(action: {
+                            generateQuestion()
                             currentState = .active
                         }, label: {
                             Text("Start")
@@ -91,12 +133,14 @@ struct ContentView: View {
                 Color.green
                     .ignoresSafeArea()
                 VStack {
-                    Text("Active Game")
+                    Text("\(questions[currentNumber - 1].getQuestionText())")
                         .foregroundStyle(.white)
                         .font(.title)
                         .bold()
+                    TextField("Enter your answer", text: $currentAnswer)
+                        .textInputAutocapitalization(.never)
                     Button("Result") {
-                        currentState = .finish
+                        processAnswer(index: currentNumber - 1)
                     }
                     .foregroundStyle(.white)
                     .font(.subheadline)
