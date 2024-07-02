@@ -27,26 +27,52 @@ public struct QuestionMultiplication {
 
 struct ContentView: View {
     @State private var currentState: StateGame = .setting
+    @State private var questionAmount: Int = 2
+    @State private var topBoundQuestion: Int = 3
+    @State private var bottomBoundQuestion: Int = 2
+    private var bottomBoundQuestionNumber: Int = 2
+    private var topBoundQuestionNumber: Int = 10
+    private var bottomBoundQuestionAmount: Int = 2
+    private var topBoundQuestionAmount: Int = 10
     var body: some View {
         switch currentState {
         case .setting:
             ZStack {
                 Color.gray
                     .ignoresSafeArea()
-                VStack {
-                    Text("Setting Game")
-                        .foregroundStyle(.white)
-                        .font(.title)
-                        .bold()
-                    Button("Start") {
-                        currentState = .active
+                List {
+                    Section {
+                        Text("Question Amount")
+                            .font(.headline)
+                        Stepper("\(questionAmount)", value: $questionAmount, in: bottomBoundQuestionAmount...topBoundQuestionAmount, step: 1)
+                        
                     }
-                    .foregroundStyle(.white)
-                    .font(.subheadline)
-                    .bold()
-                    
+                    Section {
+                        Text("Range of Multiplication Number")
+                            .font(.headline)
+                        Stepper("Bottom Number: \(bottomBoundQuestion)", value: $bottomBoundQuestion, in: bottomBoundQuestionNumber...topBoundQuestionNumber, step: 1) { _ in
+                            if bottomBoundQuestion >= topBoundQuestion {
+                                bottomBoundQuestion = bottomBoundQuestion - 1
+                            }
+                        }
+                        Stepper("Top Number: \(topBoundQuestion)", value: $topBoundQuestion, in: bottomBoundQuestionNumber...topBoundQuestionNumber, step: 1){ _ in
+                            if bottomBoundQuestion >= topBoundQuestion {
+                                topBoundQuestion = topBoundQuestion + 1
+                            }
+                        }
+                        
+                    }
+                    Section {
+                        Button("Start") {
+                            currentState = .active
+                        }
+                        .foregroundStyle(.black)
+                        .font(.subheadline)
+                        .bold()
+                    }
+                    .navigationTitle("Setting")
                 }
-                .padding()
+                
             }
         case .active:
             ZStack {
