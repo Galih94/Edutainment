@@ -27,15 +27,16 @@ public struct QuestionMultiplication {
 
 struct ContentView: View {
     @State private var currentState: StateGame = .setting
-    @State private var questionAmount: Int = 2
+    @State private var questionAmount: Int = 10
     @State private var topBoundQuestion: Int = 3
     @State private var bottomBoundQuestion: Int = 2
     @State private var questions: [QuestionMultiplication] = []
     @State private var currentNumber: Int = 1
     @State private var currentScore: Int = 0
     @State private var currentAnswer: String = ""
+    private let questionAmounts: [Int] = [5, 10, 20]
     private var bottomBoundQuestionNumber: Int = 2
-    private var topBoundQuestionNumber: Int = 10
+    private var topBoundQuestionNumber: Int = 12
     private var bottomBoundQuestionAmount: Int = 2
     private var topBoundQuestionAmount: Int = 10
     
@@ -88,7 +89,16 @@ struct ContentView: View {
                         .bold()
                     Spacer()
                     VStack {
-                        Stepper("Question Amount: \(questionAmount)", value: $questionAmount, in: bottomBoundQuestionAmount...topBoundQuestionAmount, step: 1)
+//                        Stepper("Question Amount: \(questionAmount)", value: $questionAmount, in: bottomBoundQuestionAmount...topBoundQuestionAmount, step: 1)
+                        Text("Question Amount: \(questionAmount)")
+                            .foregroundStyle(.white)
+                            .font(.headline)
+                        Picker("", selection: $questionAmount, content: {
+                            ForEach(questionAmounts, id: \.self) {
+                                Text("\($0)")
+                            }
+                        })
+                        .pickerStyle(.segmented)
                         .foregroundStyle(.white)
                         
                     }.padding()
@@ -99,8 +109,6 @@ struct ContentView: View {
                         Stepper("Bottom Number: \(bottomBoundQuestion)", value: $bottomBoundQuestion, in: bottomBoundQuestionNumber...topBoundQuestionNumber, step: 1) { _ in
                             if bottomBoundQuestion >= topBoundQuestion {
                                 bottomBoundQuestion = bottomBoundQuestion - 1
-                            } else {
-                                bottomBoundQuestion
                             }
                         }
                         .foregroundStyle(.white)
@@ -141,6 +149,7 @@ struct ContentView: View {
                         .bold()
                     TextField("Enter your answer", text: $currentAnswer)
                         .textInputAutocapitalization(.never)
+                        .keyboardType(.numberPad)
                     Button("Result") {
                         processAnswer(index: currentNumber - 1)
                     }
